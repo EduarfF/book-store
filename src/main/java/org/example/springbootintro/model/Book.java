@@ -7,10 +7,12 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import java.math.BigDecimal;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 @Entity
-@Data
+@Setter
+@Getter
 @Table(name = "books")
 public class Book {
     @Id
@@ -29,9 +31,7 @@ public class Book {
     @Column(nullable = false)
     private BigDecimal price;
 
-    @Column
     private String description;
 
-    @Column
     private String coverImage;
 }
