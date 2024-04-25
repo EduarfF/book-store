@@ -17,33 +17,37 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping(value = "apibooks")
+@RequestMapping(value = "api/books")
 @RequiredArgsConstructor
 public class BookController {
     private final BookService bookService;
 
     @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
     public BookDto save(@RequestBody CreateBookRequestDto bookDto) {
         return bookService.save(bookDto);
     }
 
     @GetMapping
+    @ResponseStatus(HttpStatus.OK)
     public List<BookDto> findAll() {
         return bookService.findAll();
     }
 
     @GetMapping("/{id}")
+    @ResponseStatus(HttpStatus.OK)
     public BookDto findById(@PathVariable Long id) {
         return bookService.findById(id);
     }
 
     @DeleteMapping("/{id}")
-    @ResponseStatus(HttpStatus.CONTINUE)
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteById(@PathVariable Long id) {
         bookService.deleteById(id);
     }
 
     @PutMapping("/{id}")
+    @ResponseStatus(HttpStatus.OK)
     public BookDto updateById(@PathVariable Long id, @RequestBody CreateBookRequestDto bookDto) {
         return bookService.updateById(id, bookDto);
     }
