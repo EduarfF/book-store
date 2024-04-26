@@ -3,11 +3,14 @@ package org.example.springbootintro.service.book;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.example.springbootintro.dto.book.BookDto;
+import org.example.springbootintro.dto.book.BookSearchParametersDto;
 import org.example.springbootintro.dto.book.CreateBookRequestDto;
 import org.example.springbootintro.exception.EntityNotFoundException;
 import org.example.springbootintro.mapper.book.BookMapper;
 import org.example.springbootintro.model.Book;
 import org.example.springbootintro.repository.book.BookRepository;
+import org.example.springbootintro.repository.book.BookSpecificationBuilder;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 @RequiredArgsConstructor
@@ -15,6 +18,7 @@ import org.springframework.stereotype.Service;
 public class BookServiceImpl implements BookService {
     private final BookRepository bookRepository;
     private final BookMapper bookMapper;
+    private final BookSpecificationBuilder bookSpecificationBuilder;
 
     @Override
     public BookDto save(CreateBookRequestDto requestDto) {
@@ -48,6 +52,14 @@ public class BookServiceImpl implements BookService {
         Book book = bookMapper.toModel(requestDto);
         book.setId(id);
         return bookMapper.toDto(bookRepository.save(book));
+    }
+
+    @Override
+    public List<BookDto> search(BookSearchParametersDto params) {
+        Specification<Book> bookSpecification = bookSpecificationBuilder.build(params);
+        return bookRepository.findAll(bookSpecification).stream()
+                .map(bookMapper::toDto)
+                .toList();
     }
 
     private void checkIfBookExists(Long id) {
