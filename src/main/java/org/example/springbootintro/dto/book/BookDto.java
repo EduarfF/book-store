@@ -1,11 +1,11 @@
 package org.example.springbootintro.dto.book;
 
 import java.math.BigDecimal;
+import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
-@Setter
-@Getter
+@Data
 public class BookDto {
     private Long id;
     private String title;
