@@ -4,14 +4,18 @@ import org.example.springbootintro.dto.book.BookSearchParametersDto;
 import org.example.springbootintro.model.Book;
 import org.example.springbootintro.repository.SpecificationBuilder;
 import org.example.springbootintro.repository.SpecificationProviderManager;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Component;
 
 @Component
 public class BookSpecificationBuilder implements SpecificationBuilder<Book> {
-    @Autowired
-    private SpecificationProviderManager<Book> bookSpecificationProviderManager;
+    private final SpecificationProviderManager<Book> bookSpecificationProviderManager;
+
+    public BookSpecificationBuilder(
+            SpecificationProviderManager<Book> bookSpecificationProviderManager
+    ) {
+        this.bookSpecificationProviderManager = bookSpecificationProviderManager;
+    }
 
     @Override
     public Specification<Book> build(BookSearchParametersDto searchParametersDto) {
