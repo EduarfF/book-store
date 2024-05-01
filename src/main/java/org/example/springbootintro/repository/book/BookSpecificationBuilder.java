@@ -1,6 +1,6 @@
 package org.example.springbootintro.repository.book;
 
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.example.springbootintro.dto.book.BookSearchParametersDto;
 import org.example.springbootintro.model.Book;
 import org.example.springbootintro.repository.SpecificationBuilder;
@@ -10,7 +10,7 @@ import org.example.springbootintro.repository.book.spec.TitleSpecificationProvid
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Component;
 
-@AllArgsConstructor
+@RequiredArgsConstructor
 @Component
 public class BookSpecificationBuilder implements SpecificationBuilder<Book> {
     private final SpecificationProviderManager<Book> bookSpecificationProviderManager;

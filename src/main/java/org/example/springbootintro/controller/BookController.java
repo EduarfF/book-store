@@ -33,7 +33,7 @@ public class BookController {
         binder.addValidators(bookSearchParametersValidator);
     }
 
-    @PostMapping("/add")
+    @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public BookDto save(@RequestBody @Valid CreateBookRequestDto bookDto) {
         return bookService.save(bookDto);
