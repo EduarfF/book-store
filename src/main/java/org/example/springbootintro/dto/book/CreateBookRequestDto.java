@@ -13,7 +13,7 @@ public class CreateBookRequestDto {
     @Size(max = 255, message = "max title length is 255 characters")
     private String title;
 
-    @NotBlank(message = "message can not be blank")
+    @NotBlank(message = "author can not be blank")
     @Size(max = 255, message = "max author length is 255 characters")
     private String author;
 
