@@ -1,0 +1,9 @@
+databaseChangeLog:
+  - changeSet:
+      id: addRoles
+      author: orgexample
+      changes:
+        - sql:
+            sql: INSERT INTO users_roles (role_id, user_id) VALUES ((SELECT id FROM roles WHERE name = 'USER'), (SELECT id FROM users WHERE email = 'Tom1995@example.com'))
+        - sql:
+            sql: INSERT INTO users_roles (role_id, user_id) VALUES ((SELECT id FROM roles WHERE name = 'ADMIN'), (SELECT id FROM users WHERE email = 'admin@example.com'))
