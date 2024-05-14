@@ -1,0 +1,41 @@
+databaseChangeLog:
+  - changeSet:
+      id: add-users
+      author: orgexample
+      changes:
+        - insert:
+            tableName: users
+            columns:
+              - column:
+                  name: email
+                  value: "Tom1995@example.com"
+              - column:
+                  name: password
+                  value: "$2a$10$GlD86LpqGfMtShWcuLGENOUL5zoKd7ywEdURvVfw4wRxyzMV00w72"
+              - column:
+                  name: first_name
+                  value: "Tom"
+              - column:
+                  name: last_name
+                  value: "Rynton"
+              - column:
+                  name: shipping_address
+                  value: "Giuseppe Rossi, Via Roma, 123 Milan, Italy, 20121"
+        - insert:
+            tableName: users
+            columns:
+              - column:
+                  name: email
+                  value: "admin@example.com"
+              - column:
+                  name: password
+                  value: "$2a$10$0BxDcVrHJQc7AtEmuF.WPeDLll1Eo0zHIdcfGLvRrC8/J0oSCTnc6"
+              - column:
+                  name: first_name
+                  value: "AdminSasha"
+              - column:
+                  name: last_name
+                  value: "AdminSasha"
+              - column:
+                  name: shipping_address
+                  value: "Juan García, Calle Gran Vía, 123 Madrid, Spain, 28013"

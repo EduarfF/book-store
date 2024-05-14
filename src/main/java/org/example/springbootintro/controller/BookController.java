@@ -12,6 +12,7 @@ import org.example.springbootintro.dto.book.validator.BookSearchParametersValida
 import org.example.springbootintro.service.book.BookService;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -38,6 +39,7 @@ public class BookController {
     }
 
     @PostMapping
+    @PreAuthorize("hasRole('ADMIN')")
     @ResponseStatus(HttpStatus.CREATED)
     @Operation(summary = "Create a new book", description = "Create a new book")
     public BookDto save(@RequestBody @Valid CreateBookRequestDto bookDto) {
@@ -45,6 +47,7 @@ public class BookController {
     }
 
     @GetMapping
+    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     @ResponseStatus(HttpStatus.OK)
     @Operation(summary = "Get all books", description = "Get list of all available books")
     public List<BookDto> findAll(Pageable pageable) {
@@ -52,6 +55,7 @@ public class BookController {
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     @ResponseStatus(HttpStatus.OK)
     @Operation(summary = "Get book by id", description = "Get book by id")
     public BookDto findById(@PathVariable Long id) {
@@ -59,6 +63,7 @@ public class BookController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @Operation(summary = "Delete book by id", description = "Delete book by id")
     public void deleteById(@PathVariable Long id) {
@@ -66,6 +71,7 @@ public class BookController {
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     @ResponseStatus(HttpStatus.OK)
     @Operation(summary = "Update book by id", description = "Update book by id")
     public BookDto updateById(@PathVariable Long id,
@@ -75,6 +81,7 @@ public class BookController {
     }
 
     @GetMapping("/search")
+    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     @ResponseStatus(HttpStatus.OK)
     @Operation(summary = "Search books", description = "Search books by author or title or both")
     public List<BookDto> search(

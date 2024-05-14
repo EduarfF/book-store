@@ -1,0 +1,32 @@
+databaseChangeLog:
+  - changeSet:
+      id: add-books
+      author: orgexample
+      changes:
+        - insert:
+            tableName: books
+            columns:
+              - column: {name: title, value: "Harry Potter" }
+              - column: {name: author, value: "Joanne Kathleen Rowling" }
+              - column: {name: isbn, value: "1234567890" }
+              - column: {name: price, value: "9.99" }
+              - column: {name: description, value: "The novels chronicle the lives of a young wizard, Harry Potter, and his friends Hermione Granger and Ron Weasley, all of whom are students at Hogwarts School of Witchcraft and Wizardry." }
+              - column: {name: cover_image, value: "https://www.bloomsbury.com/media/idyh20rp/harry-potter-and-the-philosophers-333.png?width=267&height=400" }
+        - insert:
+            tableName: books
+            columns:
+              - column: {name: title, value: "The Hobbit" }
+              - column: {name: author, value: "John Ronald Reuel Tolkien" }
+              - column: {name: isbn, value: "1234567891" }
+              - column: {name: price, value: "10.99" }
+              - column: {name: description, value: "The Hobbit is set in Middle-earth and follows home-loving Bilbo Baggins, the hobbit of the title, who joins the wizard Gandalf and the thirteen dwarves of Thorin's Company." }
+              - column: {name: cover_image, value: "https://m.media-amazon.com/images/I/A11+Gq4ebyL._AC_UF1000,1000_QL80_DpWeblab_.jpg" }
+        - insert:
+            tableName: books
+            columns:
+              - column: {name: title, value: "The Adventures of Tom Sawyer" }
+              - column: {name: author, value: "Mark Twen" }
+              - column: {name: isbn, value: "1234567892" }
+              - column: {name: price, value: "8.99" }
+              - column: {name: description, value: "Orphan Tom Sawyer lives with his Aunt Polly and his half-brother Sid in the town of St. Petersburg, Missouri, sometime in the 1840s. He frequently skips school to play or go swimming." }
+              - column: {name: cover_image, value: "https://m.media-amazon.com/images/I/41fK2D8MUjL._AC_UF1000,1000_QL80_.jpg" }

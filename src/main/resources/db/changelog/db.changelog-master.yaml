@@ -3,3 +3,17 @@ databaseChangeLog:
       file: db/changelog/changes/01-create-books-table.yml
   - include:
       file: db/changelog/changes/02-create-users-table.yml
+  - include:
+      file: db/changelog/changes/03-add-isDeletedColumn-users-table.yml
+  - include:
+      file: db/changelog/changes/04-create-roles-table.yml
+  - include:
+      file: db/changelog/changes/05-create-usersRoles-table.yml
+  - include:
+      file: db/changelog/changes/06-add-booksToBooks-table.yml
+  - include:
+      file: db/changelog/changes/07-add-rolesToRoles-table.yml
+  - include:
+      file: db/changelog/changes/08-add-usersToUsers-table.yml
+  - include:
+      file: db/changelog/changes/09-add-rolesToUsers-table.yml
