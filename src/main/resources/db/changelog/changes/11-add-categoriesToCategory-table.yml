@@ -1,0 +1,32 @@
+databaseChangeLog:
+  - changeSet:
+      id: add-categories
+      author: orgexample
+      changes:
+        - insert:
+            tableName: categories
+            columns:
+              - column:
+                  name: name
+                  value: "Fantasy"
+              - column:
+                  name: description
+                  value: "This books are about fantasy world"
+        - insert:
+            tableName: categories
+            columns:
+              - column:
+                  name: name
+                  value: "Romance novel"
+              - column:
+                  name: description
+                  value: "This books are about love"
+        - insert:
+            tableName: categories
+            columns:
+              - column:
+                  name: name
+                  value: "Adventure"
+              - column:
+                  name: description
+                  value: "This books are about voyages"

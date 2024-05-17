@@ -2,9 +2,11 @@ package org.example.springbootintro.dto.book;
 
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import java.math.BigDecimal;
+import java.util.Set;
 import lombok.Data;
 
 @Data
@@ -31,4 +33,8 @@ public class CreateBookRequestDto {
     private String description;
 
     private String coverImage;
+
+    @NotEmpty(message = "CategoryIds can not be empty")
+    @Size(min = 1, message = "Book must have at least 1 category")
+    private Set<Long> categoryIds;
 }
