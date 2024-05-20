@@ -10,7 +10,6 @@ public class CreateCategoryRequestDto {
     @Size(max = 20, message = "max name length is 20 characters")
     private String name;
 
-    @NotBlank(message = "category description can not be blank")
     @Size(max = 255, message = "max description is 255 characters")
     private String description;
 }

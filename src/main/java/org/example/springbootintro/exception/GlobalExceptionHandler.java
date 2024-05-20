@@ -48,6 +48,12 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return getObjectResponseEntity(ex.getMessage(), ex, HttpStatus.NOT_FOUND);
     }
 
+    @ExceptionHandler(InvalidCategoryIdsException.class)
+    protected ResponseEntity<Object> handleMethodInvalidCategoryIdsException(
+            InvalidCategoryIdsException ex) {
+        return getObjectResponseEntity(ex.getMessage(), ex, HttpStatus.NOT_FOUND);
+    }
+
     @ExceptionHandler(RegistrationException.class)
     protected ResponseEntity<Object> handleMethodRegistrationException(
             RegistrationException ex) {

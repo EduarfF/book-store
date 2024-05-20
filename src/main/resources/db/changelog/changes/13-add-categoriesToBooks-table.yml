@@ -8,43 +8,43 @@ databaseChangeLog:
             columns:
               - column:
                   name: book_id
-                  value: 1
+                  valueComputed: (SELECT id FROM books WHERE title = 'Harry Potter')
               - column:
                   name: category_id
-                  value: 1
+                  valueComputed: (SELECT id FROM categories WHERE name = 'Fantasy')
         - insert:
             tableName: books_categories
             columns:
               - column:
                   name: book_id
-                  value: 2
+                  valueComputed: (SELECT id FROM books WHERE title = 'The Hobbit')
               - column:
                   name: category_id
-                  value: 1
+                  valueComputed: (SELECT id FROM categories WHERE name = 'Fantasy')
         - insert:
             tableName: books_categories
             columns:
               - column:
                   name: book_id
-                  value: 3
+                  valueComputed: (SELECT id FROM books WHERE title = 'The Adventures of Tom Sawyer')
               - column:
                   name: category_id
-                  value: 3
+                  valueComputed: (SELECT id FROM categories WHERE name = 'Adventure')
         - insert:
             tableName: books_categories
             columns:
               - column:
                   name: book_id
-                  value: 4
+                  valueComputed: (SELECT id FROM books WHERE title = 'Twilight')
               - column:
                   name: category_id
-                  value: 2
+                  valueComputed: (SELECT id FROM categories WHERE name = 'Romance novel')
         - insert:
             tableName: books_categories
             columns:
               - column:
                   name: book_id
-                  value: 5
+                  valueComputed: (SELECT id FROM books WHERE title = 'Twilight New Moon')
               - column:
                   name: category_id
-                  value: 2
+                  valueComputed: (SELECT id FROM categories WHERE name = 'Romance novel')

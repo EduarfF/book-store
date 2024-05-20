@@ -1,6 +1,7 @@
 package org.example.springbootintro.service.category;
 
 import java.util.List;
+import java.util.Set;
 import lombok.AllArgsConstructor;
 import org.example.springbootintro.dto.category.CategoryDto;
 import org.example.springbootintro.dto.category.CreateCategoryRequestDto;
@@ -49,6 +50,11 @@ public class CategoryServiceImpl implements CategoryService {
     public void deleteById(Long id) {
         checkIfCategoryExists(id);
         categoryRepository.deleteById(id);
+    }
+
+    @Override
+    public Set<Long> getAllCategoryIds() {
+        return categoryRepository.findAllIds();
     }
 
     private void checkIfCategoryExists(Long id) {
