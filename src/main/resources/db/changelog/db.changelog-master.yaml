@@ -17,3 +17,11 @@ databaseChangeLog:
       file: db/changelog/changes/08-add-usersToUsers-table.yml
   - include:
       file: db/changelog/changes/09-add-rolesToUsers-table.yml
+  - include:
+      file: db/changelog/changes/10-create-categories-table.yml
+  - include:
+      file: db/changelog/changes/11-add-categoriesToCategory-table.yml
+  - include:
+      file: db/changelog/changes/12-create-booksCategories-table.yml
+  - include:
+      file: db/changelog/changes/13-add-categoriesToBooks-table.yml

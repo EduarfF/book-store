@@ -30,3 +30,21 @@ databaseChangeLog:
               - column: {name: price, value: "8.99" }
               - column: {name: description, value: "Orphan Tom Sawyer lives with his Aunt Polly and his half-brother Sid in the town of St. Petersburg, Missouri, sometime in the 1840s. He frequently skips school to play or go swimming." }
               - column: {name: cover_image, value: "https://m.media-amazon.com/images/I/41fK2D8MUjL._AC_UF1000,1000_QL80_.jpg" }
+        - insert:
+            tableName: books
+            columns:
+              - column: { name: title, value: "Twilight" }
+              - column: { name: author, value: "Stephenie Meyer" }
+              - column: { name: isbn, value: "1234567893" }
+              - column: { name: price, value: "18.99" }
+              - column: { name: description, value: "Bella Swan moves from Phoenix, Arizona to live with her father in Forks, Washington to allow her mother to travel with her new husband, a minor league baseball player." }
+              - column: { name: cover_image, value: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSzDvwiTBKPhLUnFeKy9n2XUpJqxDGjCvH9TDfklqbYHA&s" }
+        - insert:
+            tableName: books
+            columns:
+              - column: { name: title, value: "Twilight New Moon" }
+              - column: { name: author, value: "Stephenie Meyer" }
+              - column: { name: isbn, value: "1234567894" }
+              - column: { name: price, value: "21.99" }
+              - column: { name: description, value: "Edward and his family leave Forks because he believes he is endangering Bella's life. Bella goes into a depression until she develops a strong friendship with Jacob Black, who she discovers can shape-shift into a wolf. " }
+              - column: { name: cover_image, value: "https://m.media-amazon.com/images/I/41urJNhlFzL.jpg" }
