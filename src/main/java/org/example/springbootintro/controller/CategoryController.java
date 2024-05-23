@@ -40,7 +40,7 @@ public class CategoryController {
     }
 
     @GetMapping
-    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     @ResponseStatus(HttpStatus.OK)
     @Operation(summary = "Get all categories", description = "Get list of all categories")
     public List<CategoryDto> findAll(Pageable pageable) {
@@ -48,7 +48,7 @@ public class CategoryController {
     }
 
     @GetMapping("/{id}")
-    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     @ResponseStatus(HttpStatus.OK)
     @Operation(summary = "Get category by id", description = "Get category by id")
     public CategoryDto findById(@PathVariable Long id) {
@@ -73,7 +73,7 @@ public class CategoryController {
     }
 
     @GetMapping("/{id}/books")
-    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     @ResponseStatus(HttpStatus.OK)
     @Operation(summary = "Get books by category", description = "Get books by category")
     public List<BookDtoWithoutCategoryIds> findBooksByCategoryId(@PathVariable Long id) {

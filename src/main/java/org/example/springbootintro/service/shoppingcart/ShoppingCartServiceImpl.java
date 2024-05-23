@@ -4,8 +4,6 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.example.springbootintro.dto.cartitem.CartItemDto;
-import org.example.springbootintro.dto.cartitem.CreateCartItemRequestDto;
-import org.example.springbootintro.dto.cartitem.UpdateCartItemDto;
 import org.example.springbootintro.dto.shoppingcart.ShoppingCartDto;
 import org.example.springbootintro.exception.EntityNotFoundException;
 import org.example.springbootintro.mapper.cartitem.CartItemMapper;
@@ -14,7 +12,6 @@ import org.example.springbootintro.model.ShoppingCart;
 import org.example.springbootintro.model.User;
 import org.example.springbootintro.repository.cartitem.CartItemRepository;
 import org.example.springbootintro.repository.shoppingcart.ShoppingCartRepository;
-import org.example.springbootintro.service.cartitem.CartItemService;
 import org.springframework.stereotype.Service;
 
 @RequiredArgsConstructor
@@ -24,7 +21,6 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
     private final CartItemRepository cartItemRepository;
     private final CartItemMapper cartItemMapper;
     private final ShoppingCartMapper shoppingCartMapper;
-    private final CartItemService cartItemService;
 
     @Override
     public ShoppingCartDto getById(Long userId) {
@@ -50,26 +46,10 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
     }
 
     @Override
-    public CartItemDto addCartItem(CreateCartItemRequestDto requestDto, User user) {
-        return cartItemService.addCartItem(requestDto, user);
-    }
-
-    @Override
-    public CartItemDto updateCartItem(
-            UpdateCartItemDto updateDto,
-            Long userId,
-            Long cartItemId
-    ) {
-        return cartItemService.updateCartItem(updateDto, userId, cartItemId);
-    }
-
-    @Override
-    public void deleteCartItemById(Long userId, Long cartItemId) {
-        cartItemService.deleteCartItemById(userId, cartItemId);
-    }
-
-    @Override
-    public void deleteCartItemsAll(Long userId) {
-        cartItemService.deleteCartItemsAll(userId);
+    public ShoppingCart getShoppingCartForUser(Long userId) {
+        return shoppingCartRepository.findByUserId(userId)
+                .orElseThrow(() -> new EntityNotFoundException(
+                        "Can not find shopping cart by id: " + userId)
+                );
     }
 }
