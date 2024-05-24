@@ -1,0 +1,31 @@
+databaseChangeLog:
+  - changeSet:
+      id: create-cartItems-table
+      author: orgexample
+      changes:
+        - createTable:
+            tableName: cart_items
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: shopping_carts_id
+                  type: bigint
+                  constraints:
+                    foreignKeyName: fk_cart_item_shopping_carts
+                    references: users(id)
+              - column:
+                  name: book_id
+                  type: bigint
+                  constraints:
+                    foreignKeyName: fk_cart_item_book
+                    references: books(id)
+              - column:
+                  name: quantity
+                  type: int
+                  constraints:
+                    nullable: false
