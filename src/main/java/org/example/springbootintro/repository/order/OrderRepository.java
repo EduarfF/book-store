@@ -12,6 +12,6 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
     @Query("SELECT o FROM Order o JOIN FETCH o.orderItems WHERE o.user.id = :userId")
     List<Order> findAllByUserId(Long userId, Pageable pageable);
 
-    @EntityGraph(attributePaths = {"orderItems"})
-    Optional<Order> findByIdAndUserId(Long orderId, Long userId);
+    @EntityGraph(attributePaths = "orderItems")
+    Optional<Order> findOrderByIdAndUserId(Long orderId, Long userId);
 }

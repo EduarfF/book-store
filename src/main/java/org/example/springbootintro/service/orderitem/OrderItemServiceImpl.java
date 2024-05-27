@@ -15,13 +15,16 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 @Service
 public class OrderItemServiceImpl implements OrderItemService {
-    private final OrderRepository orderRepository;
     private final OrderItemRepository orderItemRepository;
     private final OrderItemMapper orderItemMapper;
+    private final OrderRepository orderRepository;
 
     @Override
-    public List<OrderItemDto> getAll(Long id, Pageable pageable) {
-        return orderItemRepository.findAllByOrderId(id, pageable)
+    public List<OrderItemDto> getAll(Long orderId, Long userId, Pageable pageable) {
+        Order order = orderRepository.findOrderByIdAndUserId(orderId, userId)
+                .orElseThrow(() -> new EntityNotFoundException("Can not find order"));
+
+        return order.getOrderItems()
                 .stream()
                 .map(orderItemMapper::toDto)
                 .toList();
@@ -29,14 +32,8 @@ public class OrderItemServiceImpl implements OrderItemService {
 
     @Override
     public OrderItemDto getByItemId(Long userId, Long orderId, Long itemId) {
-        Order order = orderRepository.findByIdAndUserId(orderId, userId)
-                .orElseThrow(() -> new EntityNotFoundException(
-                        "Can not find order with id: " + orderId)
-                );
-        OrderItem orderItem = order.getOrderItems()
-                .stream()
-                .filter(item -> item.getId().equals(itemId))
-                .findFirst()
+        OrderItem orderItem = orderItemRepository
+                .findByOrderIdAndUserIdAndItemId(orderId, userId, itemId)
                 .orElseThrow(() -> new EntityNotFoundException(
                         "Can not find order item with id: " + itemId)
                 );

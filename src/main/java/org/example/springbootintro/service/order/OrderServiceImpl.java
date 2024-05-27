@@ -33,8 +33,8 @@ public class OrderServiceImpl implements OrderService {
     private final OrderMapper orderMapper;
 
     @Override
-    public List<OrderDto> getAll(Long id, Pageable pageable) {
-        List<Order> orders = orderRepository.findAllByUserId(id, pageable);
+    public List<OrderDto> getAll(Long orderId, Pageable pageable) {
+        List<Order> orders = orderRepository.findAllByUserId(orderId, pageable);
         return orders.stream()
                 .map(orderMapper::toDto)
                 .toList();
@@ -48,20 +48,26 @@ public class OrderServiceImpl implements OrderService {
                         "Can not find shopping cart with such user id: " + user.getId())
                 );
 
-        Order order = new Order(
+        Order order = createOrder(user, requestDto, shoppingCart);
+
+        Set<OrderItem> orderItems = getOrderItems(shoppingCart, order);
+
+        order.setTotal(getTotal(orderItems));
+        order.setOrderItems(orderItems);
+        cartItemRepository.deleteAll(shoppingCart.getCartItems());
+
+        return orderMapper.toDto(orderRepository.save(order));
+    }
+
+    private Order createOrder(
+            User user, CreateOrderRequestDto requestDto, ShoppingCart shoppingCart
+    ) {
+        return new Order(
                 user,
                 Status.PENDING,
                 LocalDateTime.now(),
                 requestDto.getShippingAddress()
         );
-
-        Set<OrderItem> orderItems = getOrderItems(shoppingCart, order);
-
-        order.setTotal(getSumOfAllItems(orderItems));
-        order.setOrderItems(orderItems);
-        cartItemRepository.deleteAll(shoppingCart.getCartItems());
-
-        return orderMapper.toDto(orderRepository.save(order));
     }
 
     @Override
@@ -75,7 +81,7 @@ public class OrderServiceImpl implements OrderService {
         return orderMapper.toDto(orderRepository.save(order));
     }
 
-    private static Set<OrderItem> getOrderItems(ShoppingCart shoppingCart, Order order) {
+    private Set<OrderItem> getOrderItems(ShoppingCart shoppingCart, Order order) {
         Set<OrderItem> orderItems = new HashSet<>();
         for (CartItem item : shoppingCart.getCartItems()) {
             OrderItem orderItem = new OrderItem(
@@ -89,13 +95,9 @@ public class OrderServiceImpl implements OrderService {
         return orderItems;
     }
 
-    private static BigDecimal getSumOfAllItems(Set<OrderItem> orderItems) {
-        BigDecimal sum = BigDecimal.ZERO;
-        for (OrderItem item : orderItems) {
-            BigDecimal itemTotal = item.getPrice()
-                    .multiply(BigDecimal.valueOf(item.getQuantity()));
-            sum = sum.add(itemTotal);
-        }
-        return sum;
+    private static BigDecimal getTotal(Set<OrderItem> orderItems) {
+        return orderItems.stream()
+                .map(item -> item.getPrice().multiply(BigDecimal.valueOf(item.getQuantity())))
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 }

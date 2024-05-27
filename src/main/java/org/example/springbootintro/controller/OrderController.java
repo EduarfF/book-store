@@ -70,9 +70,10 @@ public class OrderController {
     )
     public List<OrderItemDto> getAllOrderItemsForSpecificOrder(
             @PathVariable Long orderId,
+            @AuthenticationPrincipal User user,
             Pageable pageable
     ) {
-        return orderItemService.getAll(orderId, pageable);
+        return orderItemService.getAll(orderId, user.getId(), pageable);
     }
 
     @GetMapping("/{orderId}/items/{itemId}")
