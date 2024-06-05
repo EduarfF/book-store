@@ -14,6 +14,7 @@ orders. Security is ensured through robust authentication and authorization mech
 <p align="center" style="font-size: 1.2em;">
   <a href="#technologies" style="text-decoration: none;">🚀 <strong>Technologies</strong></a> •
   <a href="#getting-started" style="text-decoration: none;">🛠️ <strong>Getting Started</strong></a> •
+  <a href="#postman" style="text-decoration: none;">📬 <strong>Postman Collection</strong></a>
   <a href="#domain-models" style="text-decoration: none;">📚 <strong>Domain Models</strong></a> •
   <a href="#user-roles" style="text-decoration: none;">👥 <strong>User Roles</strong></a> •
   <a href="#endpoints" style="text-decoration: none;">🔗 <strong>Endpoints</strong></a>
@@ -88,6 +89,12 @@ JWT_EXPIRATION=your_jwt_expiration
 
 <h2 style="font-size: medium;">5. The application should now be running at http://localhost:&lt;YOUR_PORT_FROM_ENV&gt;</h2>
 
+<div>
+    <h2 id="postman">📬 Postman Collection</h2>
+    <a href="https://www.postman.com/eduardf2003/workspace/bookstore">
+        <img src="https://run.pstmn.io/button.svg" alt="Run in Postman" style="width: 150px; height: auto;">
+    </a>
+</div>
 
 <div style="font-size: larger;">
     <h2 id="domain-models">🎨 Domain Models</h2>
@@ -225,4 +232,12 @@ JWT_EXPIRATION=your_jwt_expiration
         <h3>Database Migrations</h3>
         <p><strong>Solution:</strong> Employed Liquibase for seamless database migrations, ensuring consistency across environments.</p>
     </div>
+</div>
+
+<div>
+    <h2>👷 Author</h2>
+    <ul>
+        <li>LinkedIn: <a href="https://www.linkedin.com/in/eduard-fakhrutdinov-4a5031262/">Eduard_Fakhrutdinov</a></li>
+        <li>GitHub: <a href="https://github.com/EduarfF">@EduarfF</a></li>
+    </ul>
 </div>
