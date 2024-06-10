@@ -17,6 +17,10 @@ public class BookSpecificationBuilder implements SpecificationBuilder<Book> {
 
     @Override
     public Specification<Book> build(BookSearchParametersDto searchParametersDto) {
+        if (searchParametersDto == null || (searchParametersDto.title() == null
+                && searchParametersDto.author() == null)) {
+            return null;
+        }
         Specification<Book> spec = Specification.where(null);
         if (searchParametersDto.title() != null && searchParametersDto.title().length > 0) {
             spec = spec.and(bookSpecificationProviderManager
