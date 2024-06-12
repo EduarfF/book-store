@@ -4,7 +4,6 @@ import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.any;
-import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
@@ -15,11 +14,11 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import org.example.springbootintro.UtilsTest;
 import org.example.springbootintro.controller.BookController;
 import org.example.springbootintro.dto.book.BookDto;
 import org.example.springbootintro.dto.book.BookSearchParametersDto;
@@ -29,8 +28,10 @@ import org.example.springbootintro.service.book.BookService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
 import org.springframework.http.MediaType;
@@ -38,7 +39,10 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
+import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
+@ExtendWith(MockitoExtension.class)
+@EnableWebMvc
 public class BookControllerTest {
     private MockMvc mockMvc;
 
@@ -62,26 +66,17 @@ public class BookControllerTest {
     @WithMockUser(roles = "ADMIN")
     @DisplayName("Test save book with valid request")
     public void saveBook_ValidRequest_Success() throws Exception {
-        CreateBookRequestDto requestDto = new CreateBookRequestDto();
-        requestDto.setTitle("Test Book");
-        requestDto.setIsbn("1234567890");
-        requestDto.setPrice(new BigDecimal("10.99"));
-        requestDto.setAuthor("Test Author");
-        requestDto.setCategoryIds(Set.of(1L, 2L));
+        // Given
+        CreateBookRequestDto requestDto = createBookRequestDto();
+        BookDto expectedBookDto = createBookDto(requestDto);
 
-        BookDto expectedBookDto = new BookDto();
-        expectedBookDto.setId(1L);
-        expectedBookDto.setTitle("Test Book");
-        expectedBookDto.setIsbn("1234567890");
-        expectedBookDto.setPrice(new BigDecimal("10.99"));
-        expectedBookDto.setAuthor("Test Author");
-        expectedBookDto.setCategoryIds(Set.of(1L, 2L));
-
+        // When
         when(bookService.save(any())).thenReturn(expectedBookDto);
 
+        // Then
         mockMvc.perform(post("/books")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(asJsonString(requestDto)))
+                        .content(UtilsTest.asJsonString(requestDto)))
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.id").value(1L))
                 .andExpect(jsonPath("$.title").value("Test Book"))
@@ -92,19 +87,21 @@ public class BookControllerTest {
                 .andExpect(jsonPath("$.categoryIds", hasSize(2)))
                 .andExpect(jsonPath("$.categoryIds", containsInAnyOrder(1, 2)));
 
-        verify(bookService, times(1)).save(requestDto);
+        // Verify
+        verify(bookService).save(requestDto);
         verifyNoMoreInteractions(bookService);
     }
 
     @Test
+    @DisplayName("Test find all books")
     public void findAllBooksTest() throws Exception {
-        // Prepare test data
-        List<BookDto> bookDtoList = new ArrayList<>();
-        bookDtoList.add(new BookDto(1L, "Book1", "Author1"));
-        bookDtoList.add(new BookDto(2L, "Book2", "Author2"));
+        // Given
+        List<BookDto> bookDtoList = createBookDtoList();
 
+        // When
         when(bookService.findAll(any(Pageable.class))).thenReturn(bookDtoList);
 
+        // Then
         mockMvc.perform(get("/books")
                         .contentType(MediaType.APPLICATION_JSON)
                         .param("page", "0")
@@ -120,12 +117,15 @@ public class BookControllerTest {
 
     @Test
     @WithMockUser(roles = "USER")
-    @DisplayName("Test find book by id")
+    @DisplayName("Test find book by ID")
     public void findBookByIdTest() throws Exception {
+        // Given
         BookDto bookDto = new BookDto(1L, "TestBook", "TestAuthor");
 
+        // When
         when(bookService.findById(1L)).thenReturn(bookDto);
 
+        // Then
         mockMvc.perform(get("/books/{id}", 1L)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
@@ -133,7 +133,8 @@ public class BookControllerTest {
                 .andExpect(jsonPath("$.title").value("TestBook"))
                 .andExpect(jsonPath("$.author").value("TestAuthor"));
 
-        verify(bookService, times(1)).findById(1L);
+        // Verify
+        verify(bookService).findById(1L);
         verifyNoMoreInteractions(bookService);
     }
 
@@ -141,48 +142,43 @@ public class BookControllerTest {
     @WithMockUser(roles = "ADMIN")
     @DisplayName("Test update book with valid request")
     public void updateBook_ValidRequest_Success() throws Exception {
-        CreateBookRequestDto requestDto = new CreateBookRequestDto();
-        requestDto.setTitle("Updated Test Book");
-        requestDto.setIsbn("1234567890");
-        requestDto.setPrice(new BigDecimal("15.99"));
-        requestDto.setCategoryIds(Set.of(1L, 2L));
-        requestDto.setAuthor("John Doe");
+        // Given
+        CreateBookRequestDto requestDto = createBookRequestDto();
+        BookDto expectedBookDto = createBookDto(requestDto);
 
-        BookDto expectedBookDto = new BookDto();
-        expectedBookDto.setId(1L);
-        expectedBookDto.setTitle("Updated Test Book");
-        expectedBookDto.setIsbn("1234567890");
-        expectedBookDto.setPrice(new BigDecimal("15.99"));
-        expectedBookDto.setCategoryIds(Set.of(1L, 2L));
-
+        // When
         when(bookService.updateById(eq(1L), any())).thenReturn(expectedBookDto);
 
+        // Then
         mockMvc.perform(put("/books/{id}", 1L)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(asJsonString(requestDto)))
+                        .content(UtilsTest.asJsonString(requestDto)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(1L))
-                .andExpect(jsonPath("$.title").value("Updated Test Book"))
+                .andExpect(jsonPath("$.title").value("Test Book"))
                 .andExpect(jsonPath("$.isbn").value("1234567890"))
-                .andExpect(jsonPath("$.price").value("15.99"))
+                .andExpect(jsonPath("$.price").value("10.99"))
+                .andExpect(jsonPath("$.author").value("Test Author"))
                 .andExpect(jsonPath("$.categoryIds").isArray())
                 .andExpect(jsonPath("$.categoryIds", hasSize(2)))
                 .andExpect(jsonPath("$.categoryIds", containsInAnyOrder(1, 2)));
 
-        verify(bookService, times(1)).updateById(eq(1L), any());
+        // Verify
+        verify(bookService).updateById(eq(1L), any());
         verifyNoMoreInteractions(bookService);
-
     }
 
     @Test
     @WithMockUser(roles = "ADMIN")
-    @DisplayName("Test delete book by id")
+    @DisplayName("Test delete book by ID")
     public void deleteBookByIdTest() throws Exception {
+        // Then
         mockMvc.perform(delete("/books/{id}", 1L)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNoContent());
 
-        verify(bookService, times(1)).deleteById(1L);
+        // Verify
+        verify(bookService).deleteById(1L);
         verifyNoMoreInteractions(bookService);
     }
 
@@ -190,13 +186,14 @@ public class BookControllerTest {
     @WithMockUser(roles = "USER")
     @DisplayName("Test search books")
     public void searchBooksTest() throws Exception {
-        List<BookDto> bookDtoList = new ArrayList<>();
-        bookDtoList.add(new BookDto(1L, "Book1", "Author1"));
-        bookDtoList.add(new BookDto(2L, "Book2", "Author2"));
+        // Given
+        List<BookDto> bookDtoList = createBookDtoList();
 
+        // When
         when(bookService.search(any(Pageable.class), any(BookSearchParametersDto.class)))
                 .thenReturn(bookDtoList);
 
+        // Then
         mockMvc.perform(get("/books/search")
                         .contentType(MediaType.APPLICATION_JSON)
                         .param("page", "0")
@@ -211,16 +208,36 @@ public class BookControllerTest {
                 .andExpect(jsonPath("$[1].title").value("Book2"))
                 .andExpect(jsonPath("$[1].author").value("Author2"));
 
-        verify(bookService, times(1)).search(any(Pageable.class),
-                any(BookSearchParametersDto.class));
+        // Verify
+        verify(bookService).search(any(Pageable.class), any(BookSearchParametersDto.class));
         verifyNoMoreInteractions(bookService);
     }
 
-    private String asJsonString(final Object obj) {
-        try {
-            return new ObjectMapper().writeValueAsString(obj);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+    private CreateBookRequestDto createBookRequestDto() {
+        CreateBookRequestDto requestDto = new CreateBookRequestDto();
+        requestDto.setTitle("Test Book");
+        requestDto.setIsbn("1234567890");
+        requestDto.setPrice(new BigDecimal("10.99"));
+        requestDto.setAuthor("Test Author");
+        requestDto.setCategoryIds(Set.of(1L, 2L));
+        return requestDto;
+    }
+
+    private BookDto createBookDto(CreateBookRequestDto requestDto) {
+        BookDto bookDto = new BookDto();
+        bookDto.setId(1L);
+        bookDto.setTitle(requestDto.getTitle());
+        bookDto.setIsbn(requestDto.getIsbn());
+        bookDto.setPrice(requestDto.getPrice());
+        bookDto.setAuthor(requestDto.getAuthor());
+        bookDto.setCategoryIds(requestDto.getCategoryIds());
+        return bookDto;
+    }
+
+    private List<BookDto> createBookDtoList() {
+        List<BookDto> bookDtoList = new ArrayList<>();
+        bookDtoList.add(new BookDto(1L, "Book1", "Author1"));
+        bookDtoList.add(new BookDto(2L, "Book2", "Author2"));
+        return bookDtoList;
     }
 }

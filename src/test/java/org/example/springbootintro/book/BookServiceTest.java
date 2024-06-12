@@ -24,7 +24,7 @@ import org.example.springbootintro.repository.book.BookRepository;
 import org.example.springbootintro.repository.book.BookSpecificationBuilder;
 import org.example.springbootintro.service.book.BookServiceImpl;
 import org.example.springbootintro.service.category.CategoryService;
-import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -53,12 +53,10 @@ class BookServiceTest {
     @InjectMocks
     private BookServiceImpl bookService;
 
-    @BeforeEach
-    void setUp() {
-    }
-
     @Test
+    @DisplayName("Save book with valid request")
     void save_ValidCreateBookRequestDto_ReturnsBookDtoWithId() {
+        // Given
         CreateBookRequestDto requestDto = new CreateBookRequestDto(
                 "Test Book",
                 "Test Author",
@@ -70,9 +68,9 @@ class BookServiceTest {
         );
 
         Book book = new Book();
-
         BookDto expectedDto = new BookDto();
 
+        // Mocking behavior
         when(categoryService.getAllCategoryIds()).thenReturn(Set.of(1L, 2L));
         when(bookMapper.toModel(requestDto)).thenReturn(book);
         when(bookRepository.save(book)).thenReturn(book);
@@ -87,13 +85,16 @@ class BookServiceTest {
     }
 
     @Test
+    @DisplayName("Find book by existing ID")
     void findById_ExistingId_ReturnsBookDto() {
+        // Given
         Long bookId = 1L;
         Book book = new Book();
         book.setId(bookId);
         BookDto expectedDto = new BookDto();
         expectedDto.setId(bookId);
 
+        // Mocking behavior
         when(bookRepository.findById(bookId)).thenReturn(Optional.of(book));
         when(bookMapper.toDto(book)).thenReturn(expectedDto);
 
@@ -105,21 +106,29 @@ class BookServiceTest {
     }
 
     @Test
+    @DisplayName("Find book by non-existing ID")
     void findById_NonExistingId_ThrowsEntityNotFoundException() {
+        // Given
         Long bookId = 1L;
 
+        // Mocking behavior
         when(bookRepository.findById(bookId)).thenReturn(Optional.empty());
 
         // When, Then
-        assertThrows(EntityNotFoundException.class, () -> bookService.findById(bookId));
+        EntityNotFoundException exception = assertThrows(EntityNotFoundException.class,
+                () -> bookService.findById(bookId));
+        assertEquals("Can't find book by id: " + bookId, exception.getMessage());
     }
 
     @Test
+    @DisplayName("Delete book by existing ID")
     void deleteById_ExistingId_DeletesBook() {
+        // Given
         Long bookId = 1L;
         Book book = new Book();
         book.setId(bookId);
 
+        // Mocking behavior
         when(bookRepository.existsById(bookId)).thenReturn(true);
 
         // When
@@ -130,9 +139,12 @@ class BookServiceTest {
     }
 
     @Test
+    @DisplayName("Delete book by non-existing ID")
     void deleteById_NonExistingId_ThrowsEntityNotFoundException() {
+        // Given
         Long bookId = 1L;
 
+        // Mocking behavior
         when(bookRepository.existsById(bookId)).thenReturn(false);
 
         // When, Then
@@ -140,7 +152,9 @@ class BookServiceTest {
     }
 
     @Test
+    @DisplayName("Search books by default parameters")
     void search_ByDefault_ReturnsListOfBookDtos() {
+        // Given
         String[] titles = {"title1", "title2"};
         String[] authors = {"author1", "author2"};
         BookSearchParametersDto params = new BookSearchParametersDto(titles, authors);
@@ -168,7 +182,9 @@ class BookServiceTest {
     }
 
     @Test
+    @DisplayName("Find all books by category ID")
     void findAllByCategoryId_ByDefault_ReturnsListOfBookDtosWithoutCategoryIds() {
+        // Given
         Long categoryId = 1L;
 
         List<Book> books = new ArrayList<>();
@@ -191,7 +207,9 @@ class BookServiceTest {
     }
 
     @Test
+    @DisplayName("Find all books")
     void findAll_ByDefault_ReturnsListOfBookDtos() {
+        // Given
         Pageable pageable = PageRequest.of(0, 10);
 
         List<Book> books = new ArrayList<>();
@@ -207,7 +225,9 @@ class BookServiceTest {
     }
 
     @Test
+    @DisplayName("Update book by non-existing ID")
     void updateById_NonExistingId_ThrowsEntityNotFoundException() {
+        // Given
         Long bookId = 1L;
         CreateBookRequestDto requestDto = new CreateBookRequestDto(
                 "Updated Book",

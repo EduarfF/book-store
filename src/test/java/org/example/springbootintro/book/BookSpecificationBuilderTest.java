@@ -12,6 +12,7 @@ import org.example.springbootintro.repository.book.BookSpecificationBuilder;
 import org.example.springbootintro.repository.book.BookSpecificationProviderManager;
 import org.example.springbootintro.repository.book.spec.AuthorSpecificationProvider;
 import org.example.springbootintro.repository.book.spec.TitleSpecificationProvider;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -20,8 +21,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.jpa.domain.Specification;
 
 @ExtendWith(MockitoExtension.class)
+@DisplayName("Book Specification Builder Tests")
 class BookSpecificationBuilderTest {
-
     @InjectMocks
     private BookSpecificationBuilder bookSpecificationBuilder;
 
@@ -35,6 +36,7 @@ class BookSpecificationBuilderTest {
     private SpecificationProvider<Book> authorSpecificationProvider;
 
     @Test
+    @DisplayName("Build with empty search parameters returns null")
     void build_WithEmptySearchParameters_ReturnsNull() {
         // Given
         BookSearchParametersDto searchParametersDto = new BookSearchParametersDto(null, null);
@@ -47,6 +49,7 @@ class BookSpecificationBuilderTest {
     }
 
     @Test
+    @DisplayName("Build with title search parameter returns title specification")
     void build_WithTitleSearchParameter_ReturnsTitleSpecification() {
         // Given
         BookSearchParametersDto searchParametersDto =
@@ -66,6 +69,7 @@ class BookSpecificationBuilderTest {
     }
 
     @Test
+    @DisplayName("Build with author search parameter returns author specification")
     void build_WithAuthorSearchParameter_ReturnsAuthorSpecification() {
         // Given
         BookSearchParametersDto searchParametersDto =

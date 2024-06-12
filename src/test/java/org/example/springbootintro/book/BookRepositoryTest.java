@@ -2,35 +2,33 @@ package org.example.springbootintro.book;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.Mockito.any;
-import static org.mockito.Mockito.eq;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 import java.util.List;
 import java.util.Optional;
 import org.example.springbootintro.model.Book;
 import org.example.springbootintro.repository.book.BookRepository;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-@ExtendWith(MockitoExtension.class)
+@ExtendWith(SpringExtension.class)
+@DataJpaTest
 class BookRepositoryTest {
-    @Mock
+    @Autowired
     private BookRepository bookRepository;
 
     @Test
+    @DisplayName("Test finding all books by category ID")
     void findAllByCategoriesId_ReturnsListOfBooks() {
+        // Given
         Long categoryId = 1L;
-
-        List<Book> books = List.of(new Book(), new Book());
-        when(bookRepository.findAllByCategoriesId(categoryId)).thenReturn(books);
 
         // When
         List<Book> foundBooks = bookRepository.findAllByCategoriesId(categoryId);
@@ -40,26 +38,22 @@ class BookRepositoryTest {
     }
 
     @Test
+    @DisplayName("Test finding all books")
     void findAllBooks_ReturnsListOfBooks() {
-        Pageable pageable = Pageable.unpaged();
-
-        List<Book> books = List.of(new Book(), new Book());
-        when(bookRepository.findAllBooks(pageable)).thenReturn(books);
-
         // When
-        List<Book> foundBooks = bookRepository.findAllBooks(pageable);
+        List<Book> foundBooks = bookRepository
+                .findAll(mock(Specification.class), Pageable.unpaged())
+                .getContent();
 
         // Then
-        assertEquals(2, foundBooks.size());
+        assertEquals(5, foundBooks.size());
     }
 
     @Test
+    @DisplayName("Test finding a book by existing ID")
     void findById_ExistingId_ReturnsOptionalOfBook() {
+        // Given
         Long bookId = 1L;
-        Book book = new Book();
-        book.setId(bookId);
-
-        when(bookRepository.findById(bookId)).thenReturn(Optional.of(book));
 
         // When
         Optional<Book> foundBook = bookRepository.findById(bookId);
@@ -70,30 +64,29 @@ class BookRepositoryTest {
     }
 
     @Test
+    @DisplayName("Test finding a book by non-existing ID")
     void findById_NonExistingId_ReturnsEmptyOptional() {
-        Long bookId = 1L;
-
-        when(bookRepository.findById(bookId)).thenReturn(Optional.empty());
+        // Given
+        Long nonExistingBookId = 100L;
 
         // When
-        Optional<Book> foundBook = bookRepository.findById(bookId);
+        Optional<Book> foundBook = bookRepository.findById(nonExistingBookId);
 
         // Then
         assertTrue(foundBook.isEmpty());
     }
 
     @Test
+    @DisplayName("Test finding all books as a page")
     void findAll_ReturnsPageOfBooks() {
+        // Given
         Pageable pageable = Pageable.unpaged();
-
-        List<Book> books = List.of(new Book(), new Book());
-        Page<Book> page = new PageImpl<>(books);
-        when(bookRepository.findAll(any(Specification.class), eq(pageable))).thenReturn(page);
+        Specification<Book> specification = mock(Specification.class);
 
         // When
-        Page<Book> foundPage = bookRepository.findAll(mock(Specification.class), pageable);
+        Page<Book> foundPage = bookRepository.findAll(specification, pageable);
 
         // Then
-        assertEquals(2, foundPage.getContent().size());
+        assertEquals(5, foundPage.getContent().size());
     }
 }
