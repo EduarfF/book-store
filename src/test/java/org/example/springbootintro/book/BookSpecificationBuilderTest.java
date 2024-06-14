@@ -39,7 +39,7 @@ class BookSpecificationBuilderTest {
     @DisplayName("Build with empty search parameters returns null")
     void build_WithEmptySearchParameters_ReturnsNull() {
         // Given
-        BookSearchParametersDto searchParametersDto = new BookSearchParametersDto(null, null);
+        BookSearchParametersDto searchParametersDto = new BookSearchParametersDto();
 
         // When
         Specification<Book> spec = bookSpecificationBuilder.build(searchParametersDto);
@@ -52,8 +52,8 @@ class BookSpecificationBuilderTest {
     @DisplayName("Build with title search parameter returns title specification")
     void build_WithTitleSearchParameter_ReturnsTitleSpecification() {
         // Given
-        BookSearchParametersDto searchParametersDto =
-                new BookSearchParametersDto(new String[]{"Title"}, null);
+        BookSearchParametersDto searchParametersDto = new BookSearchParametersDto();
+        searchParametersDto.setTitle(new String[]{"Title"});
         when(bookSpecificationProviderManager
                 .getSpecificationProvider(TitleSpecificationProvider.TITLE))
                 .thenReturn(titleSpecificationProvider);
@@ -72,8 +72,8 @@ class BookSpecificationBuilderTest {
     @DisplayName("Build with author search parameter returns author specification")
     void build_WithAuthorSearchParameter_ReturnsAuthorSpecification() {
         // Given
-        BookSearchParametersDto searchParametersDto =
-                new BookSearchParametersDto(null, new String[]{"Author"});
+        BookSearchParametersDto searchParametersDto = new BookSearchParametersDto();
+        searchParametersDto.setAuthor(new String[]{"Author"});
         when(bookSpecificationProviderManager
                 .getSpecificationProvider(AuthorSpecificationProvider.AUTHOR))
                 .thenReturn(authorSpecificationProvider);

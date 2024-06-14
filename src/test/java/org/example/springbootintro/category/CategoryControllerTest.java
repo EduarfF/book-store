@@ -1,5 +1,18 @@
 package org.example.springbootintro.category;
 
+import static org.example.springbootintro.TestDataCategory.BASE_URL;
+import static org.example.springbootintro.TestDataCategory.CATEGORY_BOOKS_URL;
+import static org.example.springbootintro.TestDataCategory.CATEGORY_ID_URL;
+import static org.example.springbootintro.TestDataCategory.JSON_CONTENT_TYPE;
+import static org.example.springbootintro.TestDataCategory.TEST_BOOK_AUTHOR_1;
+import static org.example.springbootintro.TestDataCategory.TEST_BOOK_AUTHOR_2;
+import static org.example.springbootintro.TestDataCategory.TEST_BOOK_ID_1;
+import static org.example.springbootintro.TestDataCategory.TEST_BOOK_ID_2;
+import static org.example.springbootintro.TestDataCategory.TEST_BOOK_TITLE_1;
+import static org.example.springbootintro.TestDataCategory.TEST_BOOK_TITLE_2;
+import static org.example.springbootintro.TestDataCategory.TEST_CATEGORY_DESCRIPTION;
+import static org.example.springbootintro.TestDataCategory.TEST_CATEGORY_ID;
+import static org.example.springbootintro.TestDataCategory.TEST_CATEGORY_NAME;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
@@ -12,7 +25,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import java.util.ArrayList;
 import java.util.List;
-import org.example.springbootintro.UtilsTest;
+import org.example.springbootintro.TestUtils;
 import org.example.springbootintro.controller.CategoryController;
 import org.example.springbootintro.dto.book.BookDtoWithoutCategoryIds;
 import org.example.springbootintro.dto.category.CategoryDto;
@@ -27,7 +40,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
-import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -58,25 +70,26 @@ public class CategoryControllerTest {
     public void saveCategoryTest() throws Exception {
         // Given
         CreateCategoryRequestDto requestDto = new CreateCategoryRequestDto();
-        requestDto.setName("TestCategory");
-        requestDto.setDescription("TestDescription");
+        requestDto.setName(TEST_CATEGORY_NAME);
+        requestDto.setDescription(TEST_CATEGORY_DESCRIPTION);
 
         CategoryDto expectedCategoryDto = new CategoryDto();
-        expectedCategoryDto.setId(1L);
-        expectedCategoryDto.setName("TestCategory");
-        expectedCategoryDto.setDescription("TestDescription");
+        expectedCategoryDto.setId(TEST_CATEGORY_ID);
+        expectedCategoryDto.setName(TEST_CATEGORY_NAME);
+        expectedCategoryDto.setDescription(TEST_CATEGORY_DESCRIPTION);
 
         given(categoryService.save(requestDto)).willReturn(expectedCategoryDto);
 
         // When
-        mockMvc.perform(post("/categories")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(UtilsTest.asJsonString(requestDto)))
-                // Then
-                .andExpect(status().isCreated())
-                .andExpect(jsonPath("$.id").value(1L))
-                .andExpect(jsonPath("$.name").value("TestCategory"))
-                .andExpect(jsonPath("$.description").value("TestDescription"));
+        var resultActions = mockMvc.perform(post(BASE_URL)
+                .contentType(JSON_CONTENT_TYPE)
+                .content(TestUtils.asJsonString(requestDto)));
+
+        // Then
+        resultActions.andExpect(status().isCreated())
+                .andExpect(jsonPath("$.id").value(TEST_CATEGORY_ID))
+                .andExpect(jsonPath("$.name").value(TEST_CATEGORY_NAME))
+                .andExpect(jsonPath("$.description").value(TEST_CATEGORY_DESCRIPTION));
 
         // Verify
         verify(categoryService).save(requestDto);
@@ -87,20 +100,22 @@ public class CategoryControllerTest {
     @DisplayName("Test find category by id")
     public void findCategoryByIdTest() throws Exception {
         // Given
-        CategoryDto categoryDto = new CategoryDto(1L, "TestCategory", "TestDescription");
-        given(categoryService.findById(1L)).willReturn(categoryDto);
+        CategoryDto categoryDto =
+                new CategoryDto(TEST_CATEGORY_ID, TEST_CATEGORY_NAME, TEST_CATEGORY_DESCRIPTION);
+        given(categoryService.findById(TEST_CATEGORY_ID)).willReturn(categoryDto);
 
         // When
-        mockMvc.perform(get("/categories/{id}", 1L)
-                        .contentType(MediaType.APPLICATION_JSON))
-                // Then
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id").value(1L))
-                .andExpect(jsonPath("$.name").value("TestCategory"))
-                .andExpect(jsonPath("$.description").value("TestDescription"));
+        var resultActions = mockMvc.perform(get(CATEGORY_ID_URL, TEST_CATEGORY_ID)
+                .contentType(JSON_CONTENT_TYPE));
+
+        // Then
+        resultActions.andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(TEST_CATEGORY_ID))
+                .andExpect(jsonPath("$.name").value(TEST_CATEGORY_NAME))
+                .andExpect(jsonPath("$.description").value(TEST_CATEGORY_DESCRIPTION));
 
         // Verify
-        verify(categoryService).findById(1L);
+        verify(categoryService).findById(TEST_CATEGORY_ID);
         verifyNoMoreInteractions(categoryService);
     }
 
@@ -110,28 +125,30 @@ public class CategoryControllerTest {
     public void updateCategoryByIdTest() throws Exception {
         // Given
         CreateCategoryRequestDto requestDto = new CreateCategoryRequestDto();
-        requestDto.setName("TestCategory");
-        requestDto.setDescription("TestDescription");
+        requestDto.setName(TEST_CATEGORY_NAME);
+        requestDto.setDescription(TEST_CATEGORY_DESCRIPTION);
 
         CategoryDto expectedCategoryDto = new CategoryDto();
-        expectedCategoryDto.setId(1L);
-        expectedCategoryDto.setName("TestCategory");
-        expectedCategoryDto.setDescription("TestDescription");
+        expectedCategoryDto.setId(TEST_CATEGORY_ID);
+        expectedCategoryDto.setName(TEST_CATEGORY_NAME);
+        expectedCategoryDto.setDescription(TEST_CATEGORY_DESCRIPTION);
 
-        given(categoryService.updateById(1L, requestDto)).willReturn(expectedCategoryDto);
+        given(categoryService.updateById(TEST_CATEGORY_ID, requestDto))
+                .willReturn(expectedCategoryDto);
 
         // When
-        mockMvc.perform(put("/categories/{id}", 1L)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(UtilsTest.asJsonString(requestDto)))
-                // Then
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id").value(1L))
-                .andExpect(jsonPath("$.name").value("TestCategory"))
-                .andExpect(jsonPath("$.description").value("TestDescription"));
+        var resultActions = mockMvc.perform(put(CATEGORY_ID_URL, TEST_CATEGORY_ID)
+                .contentType(JSON_CONTENT_TYPE)
+                .content(TestUtils.asJsonString(requestDto)));
+
+        // Then
+        resultActions.andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(TEST_CATEGORY_ID))
+                .andExpect(jsonPath("$.name").value(TEST_CATEGORY_NAME))
+                .andExpect(jsonPath("$.description").value(TEST_CATEGORY_DESCRIPTION));
 
         // Verify
-        verify(categoryService).updateById(1L, requestDto);
+        verify(categoryService).updateById(TEST_CATEGORY_ID, requestDto);
         verifyNoMoreInteractions(categoryService);
     }
 
@@ -140,13 +157,14 @@ public class CategoryControllerTest {
     @DisplayName("Test delete category by id")
     public void deleteCategoryByIdTest() throws Exception {
         // When
-        mockMvc.perform(delete("/categories/{id}", 1L)
-                        .contentType(MediaType.APPLICATION_JSON))
-                // Then
-                .andExpect(status().isNoContent());
+        var resultActions = mockMvc.perform(delete(CATEGORY_ID_URL, TEST_CATEGORY_ID)
+                .contentType(JSON_CONTENT_TYPE));
+
+        // Then
+        resultActions.andExpect(status().isNoContent());
 
         // Verify
-        verify(categoryService).deleteById(1L);
+        verify(categoryService).deleteById(TEST_CATEGORY_ID);
         verifyNoMoreInteractions(categoryService);
     }
 
@@ -156,25 +174,28 @@ public class CategoryControllerTest {
     public void findBooksByCategoryIdTest() throws Exception {
         // Given
         List<BookDtoWithoutCategoryIds> bookDtoList = new ArrayList<>();
-        bookDtoList.add(new BookDtoWithoutCategoryIds(1L, "Book1", "Author1"));
-        bookDtoList.add(new BookDtoWithoutCategoryIds(2L, "Book2", "Author2"));
+        bookDtoList.add(new BookDtoWithoutCategoryIds(
+                TEST_BOOK_ID_1, TEST_BOOK_TITLE_1, TEST_BOOK_AUTHOR_1));
+        bookDtoList.add(new BookDtoWithoutCategoryIds(
+                TEST_BOOK_ID_2, TEST_BOOK_TITLE_2, TEST_BOOK_AUTHOR_2));
 
-        given(bookService.findAllByCategoryId(1L)).willReturn(bookDtoList);
+        given(bookService.findAllByCategoryId(TEST_CATEGORY_ID)).willReturn(bookDtoList);
 
         // When
-        mockMvc.perform(get("/categories/{id}/books", 1L)
-                        .contentType(MediaType.APPLICATION_JSON))
-                // Then
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$[0].id").value(1L))
-                .andExpect(jsonPath("$[0].title").value("Book1"))
-                .andExpect(jsonPath("$[0].author").value("Author1"))
-                .andExpect(jsonPath("$[1].id").value(2L))
-                .andExpect(jsonPath("$[1].title").value("Book2"))
-                .andExpect(jsonPath("$[1].author").value("Author2"));
+        var resultActions = mockMvc.perform(get(CATEGORY_BOOKS_URL, TEST_CATEGORY_ID)
+                .contentType(JSON_CONTENT_TYPE));
+
+        // Then
+        resultActions.andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].id").value(TEST_BOOK_ID_1))
+                .andExpect(jsonPath("$[0].title").value(TEST_BOOK_TITLE_1))
+                .andExpect(jsonPath("$[0].author").value(TEST_BOOK_AUTHOR_1))
+                .andExpect(jsonPath("$[1].id").value(TEST_BOOK_ID_2))
+                .andExpect(jsonPath("$[1].title").value(TEST_BOOK_TITLE_2))
+                .andExpect(jsonPath("$[1].author").value(TEST_BOOK_AUTHOR_2));
 
         // Verify
-        verify(bookService).findAllByCategoryId(1L);
+        verify(bookService).findAllByCategoryId(TEST_CATEGORY_ID);
         verifyNoMoreInteractions(bookService);
     }
 }

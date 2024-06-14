@@ -70,11 +70,10 @@ class BookServiceTest {
         Book book = new Book();
         BookDto expectedDto = new BookDto();
 
-        // Mocking behavior
         when(categoryService.getAllCategoryIds()).thenReturn(Set.of(1L, 2L));
         when(bookMapper.toModel(requestDto)).thenReturn(book);
-        when(bookRepository.save(book)).thenReturn(book);
         when(bookMapper.toDto(book)).thenReturn(expectedDto);
+        when(bookRepository.save(book)).thenReturn(book);
 
         // When
         BookDto actualDto = bookService.save(requestDto);
@@ -94,7 +93,6 @@ class BookServiceTest {
         BookDto expectedDto = new BookDto();
         expectedDto.setId(bookId);
 
-        // Mocking behavior
         when(bookRepository.findById(bookId)).thenReturn(Optional.of(book));
         when(bookMapper.toDto(book)).thenReturn(expectedDto);
 
@@ -111,7 +109,6 @@ class BookServiceTest {
         // Given
         Long bookId = 1L;
 
-        // Mocking behavior
         when(bookRepository.findById(bookId)).thenReturn(Optional.empty());
 
         // When, Then
@@ -125,10 +122,7 @@ class BookServiceTest {
     void deleteById_ExistingId_DeletesBook() {
         // Given
         Long bookId = 1L;
-        Book book = new Book();
-        book.setId(bookId);
 
-        // Mocking behavior
         when(bookRepository.existsById(bookId)).thenReturn(true);
 
         // When
@@ -144,7 +138,6 @@ class BookServiceTest {
         // Given
         Long bookId = 1L;
 
-        // Mocking behavior
         when(bookRepository.existsById(bookId)).thenReturn(false);
 
         // When, Then
@@ -159,20 +152,16 @@ class BookServiceTest {
         String[] authors = {"author1", "author2"};
         BookSearchParametersDto params = new BookSearchParametersDto(titles, authors);
 
+        List<Book> books = new ArrayList<>();
+        books.add(new Book());
+        books.add(new Book());
+        Pageable pageable = PageRequest.of(0, 10);
+        Page<Book> page = new PageImpl<>(books);
+
         Specification<Book> bookSpecification = mock(Specification.class);
         when(bookSpecificationBuilder.build(params)).thenReturn(bookSpecification);
-
-        List<Book> books = new ArrayList<>();
-        Pageable pageable = PageRequest.of(0, 10);
-        books.add(new Book());
-        books.add(new Book());
-        Page<Book> page = new PageImpl<>(books);
         when(bookRepository.findAll(bookSpecification, pageable)).thenReturn(page);
-
-        when(bookMapper.toDto(any())).thenAnswer(invocation -> {
-            Book book = invocation.getArgument(0);
-            return new BookDto();
-        });
+        when(bookMapper.toDto(any())).thenAnswer(invocation -> new BookDto());
 
         // When
         List<BookDto> foundDtos = bookService.search(pageable, params);
@@ -190,6 +179,7 @@ class BookServiceTest {
         List<Book> books = new ArrayList<>();
         books.add(new Book());
         books.add(new Book());
+
         when(bookRepository.findAllByCategoriesId(categoryId)).thenReturn(books);
 
         List<BookDtoWithoutCategoryIds> expectedDtos = books.stream()
@@ -215,6 +205,7 @@ class BookServiceTest {
         List<Book> books = new ArrayList<>();
         books.add(new Book());
         books.add(new Book());
+
         when(bookRepository.findAllBooks(pageable)).thenReturn(books);
 
         // When
