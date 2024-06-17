@@ -56,11 +56,11 @@ class BookControllerTest {
     @Autowired
     private ObjectMapper objectMapper;
 
-    @Mock
-    private BookService bookService;
-
     @Autowired
     private BookRepository bookRepository;
+
+    @Mock
+    private BookService bookService;
 
     @BeforeAll
     static void beforeAll(@Autowired WebApplicationContext applicationContext) {

@@ -23,9 +23,6 @@ import org.springframework.data.jpa.domain.Specification;
 @ExtendWith(MockitoExtension.class)
 @DisplayName("Book Specification Builder Tests")
 class BookSpecificationBuilderTest {
-    @InjectMocks
-    private BookSpecificationBuilder bookSpecificationBuilder;
-
     @Mock
     private BookSpecificationProviderManager bookSpecificationProviderManager;
 
@@ -34,6 +31,9 @@ class BookSpecificationBuilderTest {
 
     @Mock
     private SpecificationProvider<Book> authorSpecificationProvider;
+
+    @InjectMocks
+    private BookSpecificationBuilder bookSpecificationBuilder;
 
     @Test
     @DisplayName("Build with empty search parameters returns null")

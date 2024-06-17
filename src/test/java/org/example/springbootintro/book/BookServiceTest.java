@@ -70,12 +70,12 @@ class BookServiceTest {
         Book book = new Book();
         BookDto expectedDto = new BookDto();
 
+        // When
         when(categoryService.getAllCategoryIds()).thenReturn(Set.of(1L, 2L));
         when(bookMapper.toModel(requestDto)).thenReturn(book);
         when(bookMapper.toDto(book)).thenReturn(expectedDto);
         when(bookRepository.save(book)).thenReturn(book);
 
-        // When
         BookDto actualDto = bookService.save(requestDto);
 
         // Then
@@ -180,13 +180,13 @@ class BookServiceTest {
         books.add(new Book());
         books.add(new Book());
 
+        // When
         when(bookRepository.findAllByCategoriesId(categoryId)).thenReturn(books);
 
         List<BookDtoWithoutCategoryIds> expectedDtos = books.stream()
                 .map(bookMapper::toDtoWithoutCategories)
                 .collect(Collectors.toList());
 
-        // When
         List<BookDtoWithoutCategoryIds> foundDtos = bookService.findAllByCategoryId(categoryId);
 
         // Then
