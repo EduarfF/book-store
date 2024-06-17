@@ -2,7 +2,7 @@ package org.example.springbootintro.service.category;
 
 import java.util.List;
 import java.util.Set;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.example.springbootintro.dto.category.CategoryDto;
 import org.example.springbootintro.dto.category.CreateCategoryRequestDto;
 import org.example.springbootintro.exception.EntityNotFoundException;
@@ -12,7 +12,7 @@ import org.example.springbootintro.repository.category.CategoryRepository;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-@AllArgsConstructor
+@RequiredArgsConstructor
 @Service
 public class CategoryServiceImpl implements CategoryService {
     private final CategoryRepository categoryRepository;
