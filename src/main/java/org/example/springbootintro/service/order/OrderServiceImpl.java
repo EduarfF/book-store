@@ -33,8 +33,8 @@ public class OrderServiceImpl implements OrderService {
     private final OrderMapper orderMapper;
 
     @Override
-    public List<OrderDto> getAll(Long orderId, Pageable pageable) {
-        List<Order> orders = orderRepository.findAllByUserId(orderId, pageable);
+    public List<OrderDto> getAll(Long userId, Pageable pageable) {
+        List<Order> orders = orderRepository.findAllByUserId(userId, pageable);
         return orders.stream()
                 .map(orderMapper::toDto)
                 .toList();
@@ -81,7 +81,7 @@ public class OrderServiceImpl implements OrderService {
         return orderMapper.toDto(orderRepository.save(order));
     }
 
-    private Set<OrderItem> getOrderItems(ShoppingCart shoppingCart, Order order) {
+    public Set<OrderItem> getOrderItems(ShoppingCart shoppingCart, Order order) {
         Set<OrderItem> orderItems = new HashSet<>();
         for (CartItem item : shoppingCart.getCartItems()) {
             OrderItem orderItem = new OrderItem(
@@ -95,7 +95,7 @@ public class OrderServiceImpl implements OrderService {
         return orderItems;
     }
 
-    private static BigDecimal getTotal(Set<OrderItem> orderItems) {
+    public static BigDecimal getTotal(Set<OrderItem> orderItems) {
         return orderItems.stream()
                 .map(item -> item.getPrice().multiply(BigDecimal.valueOf(item.getQuantity())))
                 .reduce(BigDecimal.ZERO, BigDecimal::add);

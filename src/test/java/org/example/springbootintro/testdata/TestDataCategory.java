@@ -1,4 +1,4 @@
-package org.example.springbootintro;
+package org.example.springbootintro.testdata;
 
 import org.springframework.http.MediaType;
 

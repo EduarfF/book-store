@@ -1,15 +1,15 @@
 package org.example.springbootintro.book;
 
-import static org.example.springbootintro.TestDataBook.BOOK_BY_ID_URL;
-import static org.example.springbootintro.TestDataBook.BOOK_ID;
-import static org.example.springbootintro.TestDataBook.BOOK_TITLE;
-import static org.example.springbootintro.TestDataBook.BOOK_URL;
-import static org.example.springbootintro.TestDataBook.NEW_AUTHOR;
-import static org.example.springbootintro.TestDataBook.NEW_COVER_IMAGE;
-import static org.example.springbootintro.TestDataBook.NEW_DESCRIPTION;
-import static org.example.springbootintro.TestDataBook.NEW_ISBN;
-import static org.example.springbootintro.TestDataBook.NEW_PRICE;
-import static org.example.springbootintro.TestDataBook.NEW_TITLE;
+import static org.example.springbootintro.testdata.TestDataBook.BOOK_BY_ID_URL;
+import static org.example.springbootintro.testdata.TestDataBook.BOOK_ID;
+import static org.example.springbootintro.testdata.TestDataBook.BOOK_TITLE;
+import static org.example.springbootintro.testdata.TestDataBook.BOOK_URL;
+import static org.example.springbootintro.testdata.TestDataBook.NEW_AUTHOR;
+import static org.example.springbootintro.testdata.TestDataBook.NEW_COVER_IMAGE;
+import static org.example.springbootintro.testdata.TestDataBook.NEW_DESCRIPTION;
+import static org.example.springbootintro.testdata.TestDataBook.NEW_ISBN;
+import static org.example.springbootintro.testdata.TestDataBook.NEW_PRICE;
+import static org.example.springbootintro.testdata.TestDataBook.NEW_TITLE;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -128,7 +128,8 @@ class BookControllerTest {
 
         // Then
         List<BookDto> actual = objectMapper.readValue(result,
-                new TypeReference<List<BookDto>>() {});
+                new TypeReference<List<BookDto>>() {
+                });
 
         // Verify
         assertNotNull(actual);

@@ -3,6 +3,7 @@ package org.example.springbootintro.dto.user;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.example.springbootintro.dto.user.validator.FieldMatch;
 
 @Data
@@ -11,6 +12,7 @@ import org.example.springbootintro.dto.user.validator.FieldMatch;
         fieldMatch = "repeatPassword",
         message = "Passwords must be equal"
 )
+@NoArgsConstructor
 public class UserRegistrationRequestDto {
     @NotBlank(message = "Email can not be blank")
     private String email;
@@ -30,4 +32,9 @@ public class UserRegistrationRequestDto {
     private String lastName;
 
     private String shippingAddress;
+
+    public UserRegistrationRequestDto(String email, String password) {
+        this.email = email;
+        this.password = password;
+    }
 }
