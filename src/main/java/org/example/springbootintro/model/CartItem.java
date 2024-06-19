@@ -11,6 +11,7 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
@@ -19,6 +20,7 @@ import lombok.ToString;
 @Setter
 @EqualsAndHashCode
 @ToString
+@NoArgsConstructor
 @Table(name = "cart_items")
 public class CartItem {
     @Id
@@ -37,4 +39,9 @@ public class CartItem {
 
     @Column(nullable = false)
     private int quantity;
+
+    public CartItem(Book book, int quantity) {
+        this.book = book;
+        this.quantity = quantity;
+    }
 }
